@@ -10,7 +10,7 @@ jobs:
       runs-on: ubuntu-latest
       
       steps:
-        - name: Configure SSH Google Cloud #conexão GCP ao Github
+        - name: Configure SSH Google Cloud 
           run: |
             mkdir -p ~/.ssh/
             echo "$CLOUD_KEY" > ~/.ssh/google-cloud.key 
@@ -27,10 +27,10 @@ jobs:
             CLOUD_KEY: ${{ secrets.GOOGLE_CLOUD_PRIVATE_KEY }}
             CLOUD_HOST: ${{ secrets.GOOGLE_CLOUD_HOST }}
             
-        - name: Checkout #chegagem de codigo
+        - name: Checkout 
           uses: actions/checkout@v3.5.2
 
-        - name: Setup Node.js V16.x #install node
+        - name: Setup Node.js V16.x 
           uses: actions/setup-node@v2.5.2
           with:
             node-version: 16.x
@@ -46,7 +46,7 @@ jobs:
         - name: SonarCloud Scan 
           uses: SonarSource/sonarcloud-github-action@master
           env:
-               GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
+               GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} 
                SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         
         - name: Build Application 
