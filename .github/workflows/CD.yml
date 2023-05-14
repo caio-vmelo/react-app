@@ -29,4 +29,4 @@ jobs:
       - name: Build and deploy to non-prod
         run: |
           npm install
-          npx serve /app/react-app -p 8081
+          npx serve /app/react-app -p 8080
