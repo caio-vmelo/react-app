@@ -52,7 +52,7 @@ jobs:
       - name: Build Application 
         run: |
           npm run build
-          npx serve /app/react-app -l 8080
+          npx /usr/bin/npx serve /app/react-app -p 8080
         
       - name: Deploy Application 
         run: |
