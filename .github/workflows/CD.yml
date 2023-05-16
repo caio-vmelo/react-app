@@ -50,9 +50,7 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
       
       - name: Build Application 
-        run: |
-          npm run build
-       #   npx serve /app/react-app -p 3000
+        run: npm run build
 
       - name: Deploy Application 
         run: |
