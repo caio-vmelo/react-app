@@ -59,3 +59,5 @@ jobs:
              scp -r build google-cloud:/home/github/react-app
              ssh google-cloud 'sudo mv /home/github/react-app /app/react-app'
              ssh google-cloud 'sudo systemctl start react-app'
+
+        
