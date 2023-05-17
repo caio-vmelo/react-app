@@ -54,6 +54,7 @@ jobs:
           
         - name: Deploy Application 
           run: |
+             echo "Executando o deploy no ambiente não produtivo"
              ssh google-cloud 'sudo systemctl stop react-app'
              ssh google-cloud 'sudo rm -rf /app/react-app'
              scp -r build google-cloud:/home/github/react-app
