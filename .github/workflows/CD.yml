@@ -54,8 +54,8 @@ jobs:
           
         - name: Deploy Application 
           run: |
-           ssh google-cloud-main 'sudo systemctl stop react-app-main'
-           ssh google-cloud-main 'sudo rm -rf /app/react-app-main'
-           scp -r build google-cloud-main:/home/github/react-app-main
-           ssh google-cloud-main 'sudo mv /home/github/react-app-main /app/react-app-main'
-           ssh google-cloud-main 'sudo systemctl start react-app-main' 
+           ssh google-cloud 'sudo systemctl stop react-app-main'
+           ssh google-cloud 'sudo rm -rf /app/react-app-main'
+           scp -r build google-cloud:/home/github/react-app-main
+           ssh google-cloud 'sudo mv /home/github/react-app-main /app/react-app-main'
+           ssh google-cloud 'sudo systemctl start react-app-main' 
