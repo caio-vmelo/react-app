@@ -56,8 +56,8 @@ jobs:
 
       - name: Deploy da Aplicação para Ambiente Release
         run: |
-          ssh google-cloud-release 'sudo systemctl stop react-app-release'
-          ssh google-cloud-release 'sudo rm -rf /app/react-app-release'
-          scp -r build google-cloud-release:/home/github/react-app-release
-          ssh google-cloud-release 'sudo mv /home/github/react-app-release /app/react-app-release'
-          ssh google-cloud-release 'sudo systemctl start react-app-release'
+          ssh google-cloud 'sudo systemctl stop react-app-release'
+          ssh google-cloud 'sudo rm -rf /app/react-app-release'
+          scp -r build google-cloud:/home/github/react-app-release
+          ssh google-cloud 'sudo mv /home/github/react-app-release /app/react-app-release'
+          ssh google-cloud 'sudo systemctl start react-app-release'
