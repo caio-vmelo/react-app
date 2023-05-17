@@ -1,57 +1,59 @@
 name: CD - Release
 on:
-   push:
-      branches:
-        - release
-   workflow_dispatch:   
-        
-jobs:
-    CD:
-      runs-on: ubuntu-latest
-      
-      steps:
-        - name: Configure SSH Google Cloud 
-          run: |
-            mkdir -p ~/.ssh/
-            echo "$CLOUD_KEY" > ~/.ssh/google-cloud.key 
-            chmod 600 ~/.ssh/google-cloud.key 
-            cat >>~/.ssh/config <<END
-            Host google-cloud
-              HostName $CLOUD_HOST
-              User $CLOUD_USER
-              IdentityFile ~/.ssh/google-cloud.key
-              StrictHostKeyChecking no
-            END
-          env: 
-            CLOUD_USER: ${{ secrets.GOOGLE_CLOUD_SSH_USER }}
-            CLOUD_KEY: ${{ secrets.GOOGLE_CLOUD_SSH_KEY }}
-            CLOUD_HOST: ${{ secrets.GOOGLE_CLOUD_SSH_HOST }}
-            
-        - name: Checkout 
-          uses: actions/checkout@v3.5.2
+  push:
+    branches:
+      - release
 
-        - name: Setup Node.js V16.x 
-          uses: actions/setup-node@v2.5.2
-          with:
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout do código-fonte
+        uses: actions/checkout@v2
+
+      - name: Configurar SSH Google Cloud
+        run: |
+          mkdir -p ~/.ssh/
+          echo "$CLOUD_KEY" > ~/.ssh/google-cloud.key
+          chmod 600 ~/.ssh/google-cloud.key
+          cat >>~/.ssh/config <<END
+          Host google-cloud-release
+            HostName $CLOUD_HOST_RELEASE
+            User $CLOUD_USER
+            IdentityFile ~/.ssh/google-cloud.key
+            StrictHostKeyChecking no
+          END
+        env:
+          CLOUD_USER: ${{ secrets.GOOGLE_CLOUD_SSH_USER }}
+          CLOUD_KEY: ${{ secrets.GOOGLE_CLOUD_SSH_KEY }}
+          CLOUD_HOST_RELEASE: ${{ secrets.GOOGLE_CLOUD_SSH_HOST_RELEASE }}
+          
+      - name: Checkout 
+        uses: actions/checkout@v3.5.2
+
+      - name: Setup Node.js V16.x 
+        uses: actions/setup-node@v2.5.2
+        with:
             node-version: 16.x
 
-        - name: Install Dependencies  
-          run: npm install
+      - name: Install Dependencies  
+        run: npm install
           
-        - name: Run the Tests 
-          run: npm run test -- --coverage
-          env:
+      - name: Run the Tests 
+        run: npm run test -- --coverage
+        env:
             CI: true
             
-        - name: SonarCloud Scan 
-          uses: SonarSource/sonarcloud-github-action@master
-          env:
+      - name: SonarCloud Scan 
+        uses: SonarSource/sonarcloud-github-action@master
+        env:
                GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} 
                SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        
-        - name: Build Application 
-          run: npm run build
-          
+
+      - name: Build da Aplicação
+        run: npm run build
+
       - name: Deploy da Aplicação para Ambiente Release
         run: |
           ssh google-cloud-release 'sudo systemctl stop react-app-release'
@@ -59,5 +61,3 @@ jobs:
           scp -r build google-cloud-release:/home/github/react-app-release
           ssh google-cloud-release 'sudo mv /home/github/react-app-release /app/react-app-release'
           ssh google-cloud-release 'sudo systemctl start react-app-release'
-
-        
